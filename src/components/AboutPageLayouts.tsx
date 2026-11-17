@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Layers } from "lucide-react";
@@ -34,35 +34,98 @@ const LAYOUT_OPTIONS: Array<{
 ];
 
 function FullWidthTimelineList() {
+  const listRef = useRef<HTMLOListElement>(null);
+
+  useEffect(() => {
+    const listEl = listRef.current;
+    if (!listEl) return;
+
+    const cards = Array.from(
+      listEl.querySelectorAll<HTMLElement>(".timeline-drop-card")
+    );
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduced) {
+      cards.forEach((c) => c.classList.add("is-dropped"));
+      return;
+    }
+
+    const timers = new Map<Element, ReturnType<typeof setTimeout>>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let batchOrder = 0;
+        for (const entry of entries) {
+          const card = entry.target as HTMLElement;
+          const prevTimer = timers.get(card);
+
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.05) {
+            if (!card.classList.contains("is-dropped")) {
+              card.style.setProperty("--drop-i", String(batchOrder));
+              card.classList.add("is-dropped");
+              const t = playSpringSettle(batchOrder * 110 + 520, 0.95);
+              if (t) timers.set(card, t);
+              batchOrder += 1;
+            }
+          } else if (!entry.isIntersecting) {
+            // Only reset after the card has completely left the viewport
+            if (prevTimer) {
+              clearTimeout(prevTimer);
+              timers.delete(card);
+            }
+            card.classList.remove("is-dropped");
+          }
+        }
+      },
+      { threshold: [0, 0.05], rootMargin: "0px" }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+
+    return () => {
+      observer.disconnect();
+      timers.forEach((id) => clearTimeout(id));
+    };
+  }, []);
+
   return (
-    <ol className="mt-10 divide-y divide-border border-y border-border">
-      {profile.about.careerTimeline.map((entry) => (
-        <li
-          key={`${entry.role}-${entry.period}`}
-          className="grid gap-3 py-8 transition-colors md:grid-cols-12 md:items-baseline md:gap-8"
-        >
-          <div className="md:col-span-3">
-            <span className="inline-block border-l-2 border-accent pl-3 text-xs font-semibold uppercase tracking-[0.12em] text-accent-text">
-              {entry.period}
-            </span>
-          </div>
+    <ol ref={listRef} className="mt-10 space-y-5 overflow-x-clip py-2">
+      {profile.about.careerTimeline.map((entry, index) => {
+        const side = index % 2 === 0 ? "left" : "right";
+        return (
+          <li
+            key={`${entry.role}-${entry.period}`}
+            data-side={side}
+            style={{ ["--drop-i" as string]: String(index) }}
+            className="timeline-drop-card"
+          >
+            <article className="grid w-full gap-4 border border-border border-l-4 border-l-accent bg-surface p-6 shadow-[0_14px_34px_-12px_rgba(15,35,40,0.08)] sm:p-8 md:grid-cols-12 md:items-baseline md:gap-8">
+              <div className="md:col-span-3">
+                <span className="inline-block text-xs font-semibold uppercase tracking-[0.14em] text-accent-text">
+                  {entry.period}
+                </span>
+              </div>
 
-          <div className="md:col-span-4">
-            <h3 className="font-serif text-xl font-semibold text-ink">
-              {entry.role}
-            </h3>
-            <p className="mt-1 text-sm font-medium text-ink-muted">
-              {entry.organization}
-            </p>
-          </div>
+              <div className="md:col-span-4">
+                <h3 className="font-serif text-xl font-semibold text-ink sm:text-2xl">
+                  {entry.role}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-ink-muted">
+                  {entry.organization}
+                </p>
+              </div>
 
-          <div className="md:col-span-5">
-            <p className="text-sm leading-relaxed text-ink-muted sm:text-base">
-              {entry.description}
-            </p>
-          </div>
-        </li>
-      ))}
+              <div className="md:col-span-5">
+                <p className="text-sm leading-relaxed text-ink-muted sm:text-base">
+                  {entry.description}
+                </p>
+              </div>
+            </article>
+          </li>
+        );
+      })}
     </ol>
   );
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Scale } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Scale } from "lucide-react";
 import { AnimatedProofValue } from "@/components/AnimatedProofValue";
 import { ContactForm } from "@/components/ContactForm";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -83,25 +84,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sub-header role strip + centered scales-of-justice divider (GEPLAW pattern) */}
-      <div className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-5 sm:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="font-serif text-base font-semibold text-ink sm:text-lg">
-              {profile.displayName}{" "}
-              <span className="font-normal text-ink-muted">
-                — Head of Company Secretarial Services, George Etomi &amp; Partners
-              </span>
+      {/* Sub-header current appointment & standing strip */}
+      <section
+        aria-label="Current appointment and standing"
+        className="border-b border-border bg-surface"
+      >
+        <div className="mx-auto grid max-w-6xl divide-y divide-border px-5 sm:px-8 md:grid-cols-12 md:divide-x md:divide-y-0">
+          <div className="py-4 md:col-span-4 md:py-5 md:pr-6">
+            <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-text">
+              <Scale className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Current Appointment</span>
             </p>
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-text">
-              Lagos, Nigeria
-            </span>
+            <p className="mt-1 font-serif text-base font-semibold text-ink">
+              Head of Company Secretarial Services
+            </p>
           </div>
-          <div className="mt-4 flex justify-center" aria-hidden="true">
-            <Scale className="h-7 w-7 text-accent-text" strokeWidth={1.6} />
+
+          <div className="py-4 md:col-span-3 md:px-6 md:py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+              Practice &amp; Firm
+            </p>
+            <p className="mt-1 font-serif text-base font-semibold text-ink">
+              George Etomi &amp; Partners
+            </p>
+          </div>
+
+          <div className="py-4 md:col-span-3 md:px-6 md:py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+              Jurisdiction &amp; Standing
+            </p>
+            <p className="mt-1 font-serif text-base font-semibold text-ink">
+              Lagos, Nigeria &middot; Nigerian Bar
+            </p>
+          </div>
+
+          <div className="flex items-center py-3 md:col-span-2 md:justify-end md:py-5 md:pl-6">
+            <Link
+              href="/about"
+              className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-accent-text underline underline-offset-4 transition-colors hover:text-accent-hover"
+            >
+              <span>Full biography</span>
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* 2. Slow scrolling practice ticker */}
       <div

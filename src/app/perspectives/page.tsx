@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { profile } from "@/data/profile";
@@ -25,6 +26,10 @@ export default function PerspectivesPage() {
               <p className="inline-block border-b-2 border-accent pb-1 text-xs font-semibold uppercase tracking-[0.16em] text-accent-bright">
                 {profile.statement.eyebrow}
               </p>
+              <p className="mt-3 text-xs leading-relaxed text-[#B7C7CC]">
+                Commentary on board procedure, statutory compliance, and company
+                secretarial practice.
+              </p>
             </div>
 
             <div className="lg:col-span-9">
@@ -32,9 +37,28 @@ export default function PerspectivesPage() {
                 {profile.statement.quote}
               </blockquote>
               <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border-dark pt-6">
-                <p className="text-sm font-medium text-[#B7C7CC]">
-                  — {profile.statement.attribution}
-                </p>
+                <div className="flex items-center gap-3.5">
+                  {profile.portraitPath ? (
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-accent/60 bg-bg-dark-elevated">
+                      <Image
+                        src={profile.portraitPath}
+                        alt={profile.portraitAlt}
+                        fill
+                        sizes="48px"
+                        className="object-cover object-[50%_20%]"
+                      />
+                    </div>
+                  ) : null}
+                  <div>
+                    <p className="font-serif text-base font-semibold text-[#F4F7F8]">
+                      {profile.statement.attribution}
+                    </p>
+                    <p className="block text-xs text-[#B7C7CC]">
+                      Head of Company Secretarial Services, George Etomi &amp;
+                      Partners
+                    </p>
+                  </div>
+                </div>
                 <Link
                   href="/contact?intent=briefing"
                   className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-accent-bright underline underline-offset-4 hover:text-white"

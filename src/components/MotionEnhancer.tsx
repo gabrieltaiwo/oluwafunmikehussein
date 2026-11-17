@@ -31,8 +31,16 @@ function collectStaggerTargets(container: Element): HTMLElement[] {
 
   for (const el of candidates) {
     if (seen.has(el)) continue;
-    // Skip hidden honeypot wrappers or icons/items nested inside an already-staggered card/list item
-    if (el.classList.contains("visually-hidden")) continue;
+    // Skip hidden honeypot wrappers, custom timeline drop cards, mandate slide items, or nested items
+    if (
+      el.classList.contains("visually-hidden") ||
+      el.classList.contains("timeline-drop-card") ||
+      el.closest(".timeline-drop-card") ||
+      el.classList.contains("mandate-slide-item") ||
+      el.closest(".mandate-slide-item")
+    ) {
+      continue;
+    }
     if (
       el.parentElement &&
       el.closest("article, li, figure") &&
