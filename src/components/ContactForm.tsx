@@ -40,7 +40,7 @@ export function ContactForm({
     setIntent(defaultIntent);
     if (defaultIntent === "profile" && !message) {
       setMessage(
-        "Please share a copy of Oluwafunmike Hussain's full professional profile."
+        "Please share a copy of Olufunke Hussain's full professional profile."
       );
     } else if (defaultIntent === "briefing" && !message) {
       setMessage(
@@ -245,7 +245,7 @@ export function ContactForm({
                 setIntent("profile");
                 if (!message.trim()) {
                   setMessage(
-                    "Please share a copy of Oluwafunmike Hussain's full professional profile."
+                    "Please share a copy of Olufunke Hussain's full professional profile."
                   );
                 }
               }}

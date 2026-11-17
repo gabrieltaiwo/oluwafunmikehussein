@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Layers } from "lucide-react";
-import { AnimatedProofValue } from "@/components/AnimatedProofValue";
 import { profile } from "@/data/profile";
 import { playSpringPress, playSpringSettle } from "@/lib/sound";
 
@@ -20,7 +19,7 @@ const LAYOUT_OPTIONS: Array<{
   {
     id: "option1",
     shortLabel: "1 · Studio Split",
-    title: "Option 1: Deep Studio Split Banner",
+    title: "Option 1: Seamless Studio Split Banner",
   },
   {
     id: "option2",
@@ -34,79 +33,60 @@ const LAYOUT_OPTIONS: Array<{
   },
 ];
 
-function ProofFiguresBar() {
+function FullWidthTimelineList() {
   return (
-    <section className="border-b border-border bg-surface">
-      <div className="mx-auto grid max-w-6xl divide-y divide-border px-5 sm:px-8 md:grid-cols-3 md:divide-x md:divide-y-0">
-        {profile.proofFigures.map((item) => (
-          <div
-            key={item.label}
-            className="py-9 md:px-8 md:first:pl-0 md:last:pr-0"
-          >
-            <p className="font-serif text-4xl font-semibold tracking-tight text-accent sm:text-5xl">
-              <AnimatedProofValue value={item.value} />
-            </p>
-            <p className="mt-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-ink">
-              {item.label}
-            </p>
-            <p className="mt-1 text-sm text-ink-muted">{item.detail}</p>
+    <ol className="mt-10 divide-y divide-border border-y border-border">
+      {profile.about.careerTimeline.map((entry) => (
+        <li
+          key={`${entry.role}-${entry.period}`}
+          className="grid gap-3 py-8 transition-colors md:grid-cols-12 md:items-baseline md:gap-8"
+        >
+          <div className="md:col-span-3">
+            <span className="inline-block border-l-2 border-accent pl-3 text-xs font-semibold uppercase tracking-[0.12em] text-accent-text">
+              {entry.period}
+            </span>
           </div>
-        ))}
-      </div>
-    </section>
+
+          <div className="md:col-span-4">
+            <h3 className="font-serif text-xl font-semibold text-ink">
+              {entry.role}
+            </h3>
+            <p className="mt-1 text-sm font-medium text-ink-muted">
+              {entry.organization}
+            </p>
+          </div>
+
+          <div className="md:col-span-5">
+            <p className="text-sm leading-relaxed text-ink-muted sm:text-base">
+              {entry.description}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
 
-function ExperienceAndCredentials({
-  includeTimeline = true,
-}: {
-  includeTimeline?: boolean;
-}) {
+function ExperienceAndCredentials() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-      {includeTimeline ? (
-        <section id="experience">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-text">
-              Experience &amp; Career Timeline
-            </p>
-            <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight text-ink">
-              Boardroom &amp; advisory roles
-            </h2>
-            <p className="mt-4 text-base leading-[1.78] text-ink">
-              {profile.careerInBrief.summary}
-            </p>
-          </div>
+      <section id="experience">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent-text">
+            Experience &amp; Career Timeline
+          </p>
+          <h2 className="mt-2.5 font-serif text-3xl font-semibold tracking-tight text-ink">
+            Boardroom &amp; advisory roles
+          </h2>
+          <p className="mt-4 text-base leading-[1.78] text-ink">
+            {profile.careerInBrief.summary}
+          </p>
+        </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {profile.about.careerTimeline.map((entry) => (
-              <article
-                key={`${entry.role}-${entry.period}`}
-                className="border border-border border-t-2 border-t-accent bg-surface p-7 shadow-[0_8px_24px_rgba(15,35,40,0.04)]"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent-text">
-                  {entry.period}
-                </p>
-                <h3 className="mt-2.5 font-serif text-xl font-semibold text-ink">
-                  {entry.role}
-                </h3>
-                <p className="mt-1 text-sm font-medium text-ink-muted">
-                  {entry.organization}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                  {entry.description}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
+        <FullWidthTimelineList />
+      </section>
 
-      <section
-        className={`${
-          includeTimeline ? "mt-16" : ""
-        } border border-border bg-surface p-8 sm:p-10`}
-      >
+      <section className="mt-16 border border-border bg-surface p-8 sm:p-10">
         <h2 className="font-serif text-2xl font-semibold text-ink">
           Credentials
         </h2>
@@ -164,12 +144,28 @@ function ExperienceAndCredentials({
 
 export function AboutPageLayouts() {
   const [layout, setLayout] = useState<AboutLayoutOption>("option1");
+  const [isPersianTheme, setIsPersianTheme] = useState(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved === "option1" || saved === "option2" || saved === "option3") {
       setLayout(saved);
     }
+
+    const syncTheme = () => {
+      setIsPersianTheme(
+        document.documentElement.getAttribute("data-theme") === "persian"
+      );
+    };
+
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const selectLayout = (next: AboutLayoutOption) => {
@@ -179,48 +175,59 @@ export function AboutPageLayouts() {
     window.localStorage.setItem(STORAGE_KEY, next);
   };
 
-  const portraitSrc =
-    profile.aboutBgPath ||
-    profile.secondaryPortraitPath ||
-    profile.portraitPath;
+  // Use the warm cream-graded studio image in Persian & Cream theme so there is zero icy-grey clash
+  const portraitSrc = isPersianTheme
+    ? "/images/about-studio-persian.jpg"
+    : profile.aboutBgPath ||
+      profile.secondaryPortraitPath ||
+      profile.portraitPath;
+
+  const portraitMatBg = isPersianTheme ? "bg-[#E9E0CE]" : "bg-[#C7D4D7]";
 
   return (
     <div className="fade-in relative pb-20">
-      {/* OPTION 1: Theme-harmonized Deep Studio Split (uses Persian Blue #1B3350 in Persian theme, Obsidian-Teal in Teal theme, with a warm/alabaster framed studio mat) */}
+      {/* OPTION 1: Seamless Studio Split Banner (warm Ricotta Cream/Sandstone blend in Persian theme; cool studio mist in Teal theme) */}
       {layout === "option1" ? (
         <>
-          <section className="border-b border-border-dark bg-bg-dark text-[#F4F7F8]">
+          <section
+            className={`border-b border-border ${
+              isPersianTheme
+                ? "bg-gradient-to-br from-[#F0E8D8] via-[#EAE0CC] to-[#DFD3BC] text-ink"
+                : "bg-[#C7D4D7] text-[#142226]"
+            }`}
+          >
             <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 lg:py-16">
               <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
                 <div className="lg:col-span-7">
-                  <p className="inline-block border-b-2 border-accent pb-1 text-xs font-semibold uppercase tracking-[0.14em] text-accent-bright">
+                  <p className="inline-block border-b-2 border-accent pb-1 text-xs font-semibold uppercase tracking-[0.14em] text-accent-text">
                     About
                   </p>
-                  <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight text-[#F4F7F8] sm:text-5xl">
+                  <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-5xl">
                     {profile.displayName}
                   </h1>
-                  <p className="mt-2 text-sm font-medium text-[#B7C7CC]">
-                    Also known as {profile.alternateName}
-                  </p>
 
-                  <p className="mt-7 font-serif text-xl leading-relaxed text-[#F4F7F8] sm:text-2xl">
+                  <p className="mt-7 font-serif text-xl leading-relaxed text-ink sm:text-2xl">
                     {profile.about.lead}
                   </p>
 
-                  <div className="mt-7 space-y-4 text-base leading-[1.78] text-[#D8E2E6]">
+                  <div className="mt-7 space-y-4 text-base leading-[1.78] text-ink">
                     {profile.about.paragraphs.map((paragraph) => (
                       <p key={paragraph.slice(0, 32)}>{paragraph}</p>
                     ))}
                     {profile.careerInBrief.earlyCareer1987To2006 ? (
-                      <p>{profile.careerInBrief.earlyCareer1987To2006}</p>
+                      <p className="text-ink-muted">
+                        {profile.careerInBrief.earlyCareer1987To2006}
+                      </p>
                     ) : null}
                   </div>
                 </div>
 
                 {portraitSrc ? (
                   <div className="lg:col-span-5">
-                    <figure className="mx-auto max-w-[380px] border border-border-dark bg-surface p-3 shadow-[0_24px_60px_rgba(0,0,0,0.35)] lg:max-w-none">
-                      <div className="overflow-hidden border-l-4 border-accent bg-[#C7D4D7]">
+                    <figure className="mx-auto max-w-[380px] border border-border bg-surface p-3 shadow-[0_20px_50px_-15px_rgba(27,51,80,0.16)] lg:max-w-none">
+                      <div
+                        className={`overflow-hidden border-l-4 border-accent ${portraitMatBg}`}
+                      >
                         <Image
                           src={portraitSrc}
                           alt={profile.portraitAlt}
@@ -243,21 +250,21 @@ export function AboutPageLayouts() {
             </div>
           </section>
 
-          <ProofFiguresBar />
-          <ExperienceAndCredentials includeTimeline />
+          <ExperienceAndCredentials />
         </>
       ) : null}
 
-      {/* OPTION 2: Sticky Magazine Split on native Ricotta Cream / Alabaster background */}
+      {/* OPTION 2: Sticky Magazine Split + Full-Width End-to-End Timeline Below */}
       {layout === "option2" ? (
         <>
-          <ProofFiguresBar />
           <section className="mx-auto max-w-6xl px-5 pt-12 sm:px-8 sm:pt-16">
             <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
               {portraitSrc ? (
                 <div className="lg:sticky lg:top-24 lg:col-span-5">
                   <figure className="mx-auto max-w-[380px] border border-border bg-surface p-3 shadow-[0_20px_50px_-15px_rgba(15,35,40,0.14)] lg:max-w-none">
-                    <div className="overflow-hidden border-l-4 border-accent bg-[#C7D4D7]">
+                    <div
+                      className={`overflow-hidden border-l-4 border-accent ${portraitMatBg}`}
+                    >
                       <Image
                         src={portraitSrc}
                         alt={profile.portraitAlt}
@@ -284,9 +291,6 @@ export function AboutPageLayouts() {
                 <h1 className="mt-4 font-serif text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-5xl">
                   {profile.displayName}
                 </h1>
-                <p className="mt-2 text-sm text-ink-muted">
-                  Also known as {profile.alternateName}
-                </p>
 
                 <p className="mt-8 font-serif text-xl leading-relaxed text-ink sm:text-2xl">
                   {profile.about.lead}
@@ -300,48 +304,15 @@ export function AboutPageLayouts() {
                     <p>{profile.careerInBrief.earlyCareer1987To2006}</p>
                   ) : null}
                 </div>
-
-                <div className="mt-14 border-t border-border pt-10">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-text">
-                    Experience &amp; Career Timeline
-                  </p>
-                  <h2 className="mt-2 font-serif text-2xl font-semibold text-ink">
-                    Boardroom &amp; advisory roles
-                  </h2>
-                  <p className="mt-3 text-base leading-relaxed text-ink">
-                    {profile.careerInBrief.summary}
-                  </p>
-                  <div className="mt-6 space-y-5">
-                    {profile.about.careerTimeline.map((entry) => (
-                      <article
-                        key={`${entry.role}-${entry.period}`}
-                        className="border border-border border-l-4 border-l-accent bg-surface p-6 shadow-[0_8px_24px_rgba(15,35,40,0.04)]"
-                      >
-                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent-text">
-                          {entry.period}
-                        </p>
-                        <h3 className="mt-2 font-serif text-xl font-semibold text-ink">
-                          {entry.role}
-                        </h3>
-                        <p className="mt-0.5 text-sm font-medium text-ink-muted">
-                          {entry.organization}
-                        </p>
-                        <p className="mt-2.5 text-sm leading-relaxed text-ink-muted">
-                          {entry.description}
-                        </p>
-                      </article>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </section>
 
-          <ExperienceAndCredentials includeTimeline={false} />
+          <ExperienceAndCredentials />
         </>
       ) : null}
 
-      {/* OPTION 3: Warm Cream / Alabaster Split Header with Persian-Blue Architectural Frame + Two-Column Bio Below */}
+      {/* OPTION 3: Warm Split Header + Two-Column Bio + Full-Width Timeline Below */}
       {layout === "option3" ? (
         <>
           <section className="relative overflow-hidden border-b border-border bg-bg-subtle/75 text-ink">
@@ -354,9 +325,6 @@ export function AboutPageLayouts() {
                   <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-5xl lg:text-6xl">
                     {profile.displayName}
                   </h1>
-                  <p className="mt-2.5 text-sm font-medium text-ink-muted">
-                    Also known as {profile.alternateName}
-                  </p>
                   <p className="mt-6 font-serif text-xl leading-relaxed text-ink sm:text-2xl">
                     {profile.about.lead}
                   </p>
@@ -364,23 +332,23 @@ export function AboutPageLayouts() {
 
                 {portraitSrc ? (
                   <div className="lg:col-span-6">
-                    <figure className="mx-auto max-w-[400px] border-b-4 border-accent bg-bg-dark p-3 shadow-[0_24px_60px_rgba(15,35,40,0.2)]">
-                      <Image
-                        src={portraitSrc}
-                        alt={profile.portraitAlt}
-                        width={810}
-                        height={1024}
-                        priority
-                        className="h-auto w-full object-contain"
-                      />
+                    <figure className="mx-auto max-w-[400px] border border-border border-b-4 border-b-accent bg-surface p-3 shadow-[0_20px_50px_-15px_rgba(27,51,80,0.16)]">
+                      <div className={portraitMatBg}>
+                        <Image
+                          src={portraitSrc}
+                          alt={profile.portraitAlt}
+                          width={810}
+                          height={1024}
+                          priority
+                          className="h-auto w-full object-contain"
+                        />
+                      </div>
                     </figure>
                   </div>
                 ) : null}
               </div>
             </div>
           </section>
-
-          <ProofFiguresBar />
 
           <section className="border-b border-border bg-surface">
             <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
@@ -402,7 +370,7 @@ export function AboutPageLayouts() {
             </div>
           </section>
 
-          <ExperienceAndCredentials includeTimeline />
+          <ExperienceAndCredentials />
         </>
       ) : null}
 

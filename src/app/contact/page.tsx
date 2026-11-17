@@ -5,7 +5,7 @@ import { profile } from "@/data/profile";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Contact ${profile.displayName} (also known as ${profile.alternateName}) for corporate governance advisory, board briefings, or to request a professional profile.`,
+  description: `Contact ${profile.displayName} for corporate governance advisory, board briefings, or to request a professional profile.`,
 };
 
 interface ContactPageProps {

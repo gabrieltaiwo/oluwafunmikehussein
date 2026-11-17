@@ -6,7 +6,7 @@ import { profile } from "@/data/profile";
 
 export const metadata: Metadata = {
   title: "Practice",
-  description: `Corporate governance advisory, company secretarial practice, regulatory compliance, and board briefings by ${profile.displayName} (also known as ${profile.alternateName}).`,
+  description: `Corporate governance advisory, company secretarial practice, regulatory compliance, and board briefings by ${profile.displayName}.`,
 };
 
 const practiceContextMeta: Record<

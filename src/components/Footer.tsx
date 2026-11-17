@@ -24,9 +24,7 @@ export function Footer({ hasPerspectives }: FooterProps) {
           <p className="font-serif text-lg font-semibold text-[#F4F7F8]">
             {profile.displayName}
           </p>
-          <p className="text-sm text-[#B7C7CC]">
-            Also known as {profile.alternateName}
-          </p>
+          <p className="text-sm text-[#B7C7CC]">{profile.jobTitle}</p>
           {profile.email ? (
             <p className="pt-1 text-sm">
               <a

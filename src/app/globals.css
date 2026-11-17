@@ -56,19 +56,19 @@
 
 [data-theme="persian"] {
   --bg: #f0e8d8;
-  --bg-subtle: #e6dcc8;
-  --surface: #f7f1e5;
+  --bg-subtle: #e5dbc7;
+  --surface: #f8f3e8;
   --bg-dark: #1b3350;
-  --bg-dark-elevated: #244166;
+  --bg-dark-elevated: #233f63;
   --ink: #1b3350;
-  --ink-muted: #425670;
+  --ink-muted: #465a75;
   --accent: #f03a2a;
-  --accent-text: #b82316;
-  --accent-bright: #ff6254;
+  --accent-text: #1b3350;
+  --accent-bright: #f0e8d8;
   --accent-hover: #d42b1c;
   --btn-ink: #ffffff;
-  --border: #d5c8af;
-  --border-dark: #304e73;
+  --border: #d8ccb4;
+  --border-dark: #2c4a6f;
 }
 
 @theme inline {

@@ -25,32 +25,35 @@ export function ThemeSwitcher() {
   };
 
   return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-label={`Switch color theme (current: ${
-        theme === "teal" ? "Obsidian & Teal" : "Ricotta, Persian Blue & Lobster Red"
-      })`}
-      className="inline-flex min-h-[44px] items-center gap-2 border border-border bg-bg-subtle/70 px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent"
-    >
-      <span
-        aria-hidden="true"
-        className="flex items-center gap-1"
+    <div className="fixed bottom-5 left-5 z-40">
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-label={`Switch color theme (current: ${
+          theme === "teal"
+            ? "Obsidian & Teal"
+            : "Ricotta, Persian Blue & Lobster Red"
+        })`}
+        className="inline-flex min-h-[40px] items-center gap-2 border border-border-dark bg-bg-dark/95 px-3.5 py-2 text-xs font-semibold text-[#F4F7F8] shadow-[0_16px_40px_rgba(0,0,0,0.32)] backdrop-blur-md transition-colors hover:border-accent"
       >
-        <span
-          className="h-3 w-3 rounded-full border border-black/15"
-          style={{
-            backgroundColor: theme === "teal" ? "#0D2226" : "#1B3350",
-          }}
-        />
-        <span
-          className="h-3 w-3 rounded-full border border-black/15"
-          style={{
-            backgroundColor: theme === "teal" ? "#00A8AD" : "#F03A2A",
-          }}
-        />
-      </span>
-      <span>{theme === "teal" ? "Teal Theme" : "Persian & Cream"}</span>
-    </button>
+        <span aria-hidden="true" className="flex items-center gap-1">
+          <span
+            className="h-3 w-3 rounded-full border border-white/25"
+            style={{
+              backgroundColor: theme === "teal" ? "#0D2226" : "#1B3350",
+            }}
+          />
+          <span
+            className="h-3 w-3 rounded-full border border-white/25"
+            style={{
+              backgroundColor: theme === "teal" ? "#00A8AD" : "#F03A2A",
+            }}
+          />
+        </span>
+        <span>
+          Theme: {theme === "teal" ? "Teal" : "Persian & Cream"}
+        </span>
+      </button>
+    </div>
   );
 }

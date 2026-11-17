@@ -68,8 +68,8 @@ export default function OpenGraphImage() {
             color: "#C4D3D7",
           }}
         >
-          <span>Also known as {profile.alternateName}</span>
-          <span style={{ color: "#16B2BA" }}>Corporate Governance Counsel</span>
+          <span>{profile.jobTitle}</span>
+          <span style={{ color: "#16B2BA" }}>Lagos, Nigeria</span>
         </div>
       </div>
     ),

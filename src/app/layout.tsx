@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MotionEnhancer } from "@/components/MotionEnhancer";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { profile } from "@/data/profile";
 import { getAllPerspectives } from "@/lib/perspectives";
 import "./globals.css";
@@ -82,6 +83,7 @@ export default function RootLayout({
       className={`${sourceSerif.variable} ${inter.variable}`}
     >
       <body className="bg-bg text-ink antialiased">
+        <div id="top" className="sr-only" />
         <a href="#main-content" className="skip-link visually-hidden">
           Skip to main content
         </a>
@@ -94,6 +96,7 @@ export default function RootLayout({
 
         <Footer hasPerspectives={hasPerspectives} />
 
+        <ThemeSwitcher />
         <MotionEnhancer />
 
         <script

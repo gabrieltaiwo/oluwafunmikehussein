@@ -81,24 +81,24 @@ export interface ProfileConfig {
 }
 
 export const profile: ProfileConfig = {
-  displayName: "Oluwafunmike Hussain",
+  displayName: "Olufunke Hussain",
   alternateName: "Olufunke Hussain",
   jobTitle: "Corporate Governance Counsel & Company Secretary",
   email: null,
   portraitPath: "/images/portrait.jpg",
   portraitAlt:
-    "Portrait of Oluwafunmike Hussain, lawyer and corporate governance professional",
+    "Portrait of Olufunke Hussain, lawyer and corporate governance professional",
   secondaryPortraitPath: "/images/about-studio-clean.jpg",
   secondaryPortraitAlt:
-    "Oluwafunmike Hussain, Head of Company Secretarial Services",
+    "Olufunke Hussain, Head of Company Secretarial Services",
   aboutBgPath: "/images/about-studio-clean.jpg",
   linkedinUrl: "https://www.linkedin.com/in/olufunke-hussain-a0690889/",
   otherSocials: [],
   siteUrl:
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://oluwafunmikehussain.com",
+    "https://olufunkehussain.com",
   seoDescription:
-    "Oluwafunmike Hussain (also known as Olufunke Hussain) is a Nigerian lawyer, former listed-company Executive Director and Company Secretary, advising boards on corporate governance, regulatory compliance, and company secretarial practice.",
+    "Olufunke Hussain is a Nigerian lawyer, former listed-company Executive Director and Company Secretary, advising boards on corporate governance, regulatory compliance, and company secretarial practice.",
   hero: {
     eyebrow: "Lawyer · Corporate Governance · Company Secretarial Practice",
     headline: "Boardroom counsel shaped from both sides of the table.",
@@ -126,7 +126,7 @@ export const profile: ProfileConfig = {
     eyebrow: "Perspective",
     quote:
       "“I have advised boards from the company secretary’s desk and carried executive accountability at the board table itself. Effective governance is never paperwork for its own sake—it is the discipline that keeps a board defensible under scrutiny.”",
-    attribution: "Oluwafunmike Hussain",
+    attribution: "Olufunke Hussain",
   },
   careerInBrief: {
     summary:
@@ -137,7 +137,7 @@ export const profile: ProfileConfig = {
   about: {
     lead: "A corporate governance practitioner whose perspective was formed inside a listed company boardroom before moving into specialist advisory practice.",
     paragraphs: [
-      "Most governance advice is written from the outside looking in. Across more than thirty-seven years in legal advisory, company secretarial practice, and regulatory compliance, Oluwafunmike Hussain has worked across banking, financial services, telecommunications, legal consulting, and information technology.",
+      "Most governance advice is written from the outside looking in. Across more than thirty-seven years in legal advisory, company secretarial practice, and regulatory compliance, Olufunke Hussain has worked across banking, financial services, telecommunications, legal consulting, and information technology.",
       "At NCR (Nigeria) Plc, she served for over thirteen years as Company Secretary (2006–2019) and rose concurrently to Executive Director (2016–2019)—directing corporate governance structures, statutory compliance, board procedure, and investor relations for a publicly listed company.",
       "That dual experience—holding responsibility for board procedure and regulatory compliance while also carrying executive accountability at the board table—defines how she works with chairs, non-executive directors, general counsel, and company secretaries today.",
       "After leading Synex Consult Ltd as Managing Consultant between 2020 and 2023, she became Head of Company Secretarial Services at George Etomi & Partners in March 2023, where she also leads GEP Nominees Limited. Across listed entities, regulated financial institutions, and corporate groups, her focus remains consistent: clear board charters, disciplined statutory filings, and governance structures that hold up under regulatory scrutiny.",

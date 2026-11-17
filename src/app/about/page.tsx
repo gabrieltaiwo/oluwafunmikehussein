@@ -4,7 +4,7 @@ import { profile } from "@/data/profile";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `Background and corporate governance career of ${profile.displayName} (also known as ${profile.alternateName}).`,
+  description: `Background and corporate governance career of ${profile.displayName}.`,
 };
 
 export default function AboutPage() {
