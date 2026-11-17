@@ -88,10 +88,10 @@ export const profile: ProfileConfig = {
   portraitPath: "/images/portrait.jpg",
   portraitAlt:
     "Portrait of Oluwafunmike Hussain, lawyer and corporate governance professional",
-  secondaryPortraitPath: "/images/about-portrait-clean.jpg",
+  secondaryPortraitPath: "/images/about-studio-clean.jpg",
   secondaryPortraitAlt:
     "Oluwafunmike Hussain, Head of Company Secretarial Services",
-  aboutBgPath: "/images/about-portrait-clean.jpg",
+  aboutBgPath: "/images/about-studio-clean.jpg",
   linkedinUrl: "https://www.linkedin.com/in/olufunke-hussain-a0690889/",
   otherSocials: [],
   siteUrl:

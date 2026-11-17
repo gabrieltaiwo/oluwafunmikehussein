@@ -9,10 +9,11 @@ interface FooterProps {
 export function Footer({ hasPerspectives }: FooterProps) {
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
+    { href: "/practice", label: "Practice" },
     ...(hasPerspectives
       ? [{ href: "/perspectives", label: "Perspectives" }]
       : []),
+    { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ];
 

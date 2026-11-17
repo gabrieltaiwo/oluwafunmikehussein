@@ -26,7 +26,7 @@ function parseProofValue(raw: string): ParsedMetric {
   if (rangeMatch) {
     const targetA = Number(rangeMatch[1]);
     const targetB = Number(rangeMatch[3]);
-    const startA = targetA >= 1900 ? Math.max(targetA - 30, 1900) : 0;
+    const startA = targetA >= 1900 ? 1987 : 0;
     return {
       kind: "range",
       startA,
@@ -43,7 +43,7 @@ function parseProofValue(raw: string): ParsedMetric {
   const singleMatch = /^(\d+)(.*)$/.exec(trimmed);
   if (singleMatch) {
     const targetA = Number(singleMatch[1]);
-    const startA = targetA >= 1900 ? Math.max(targetA - 37, 1900) : 0;
+    const startA = targetA >= 1900 ? 1950 : 0;
     return {
       kind: "single",
       startA,
@@ -71,7 +71,8 @@ function parseProofValue(raw: string): ParsedMetric {
 function formatMetric(parsed: ParsedMetric, progress: number): string {
   if (parsed.kind === "static") return parsed.suffix;
 
-  const eased = 1 - Math.pow(1 - progress, 3.5);
+  // Smooth cubic-out curve so digits visibly roll up across the full duration
+  const eased = 1 - Math.pow(1 - progress, 2.6);
   const currentA = Math.round(
     parsed.startA + (parsed.targetA - parsed.startA) * eased
   );
@@ -89,8 +90,9 @@ function formatMetric(parsed: ParsedMetric, progress: number): string {
 
 export function AnimatedProofValue({ value }: AnimatedProofValueProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState<string>(value);
-  const hasAnimatedRef = useRef(false);
+  const parsed = parseProofValue(value);
+  const [display, setDisplay] = useState<string>(() => formatMetric(parsed, 0));
+  const [isSettled, setIsSettled] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -99,71 +101,78 @@ export function AnimatedProofValue({ value }: AnimatedProofValueProps) {
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    if (reduced) {
+    if (reduced || parsed.kind === "static") {
       setDisplay(value);
-      return;
-    }
-
-    const parsed = parseProofValue(value);
-    if (parsed.kind === "static") {
-      setDisplay(value);
+      setIsSettled(true);
       return;
     }
 
     let rafId = 0;
+    let startDelayId: ReturnType<typeof setTimeout> | null = null;
+    let isAnimating = false;
 
-    const runAnimation = () => {
-      if (hasAnimatedRef.current) return;
-      hasAnimatedRef.current = true;
-
-      const durationMs = 1200;
-      const startTime = performance.now();
-
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / durationMs, 1);
-        setDisplay(formatMetric(parsed, progress));
-
-        if (progress < 1) {
-          rafId = window.requestAnimationFrame(step);
-        } else {
-          setDisplay(value);
-          playSpringSettle(0, 0.85);
-        }
-      };
-
+    const startCount = () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      setIsSettled(false);
       setDisplay(formatMetric(parsed, 0));
-      rafId = window.requestAnimationFrame(step);
+
+      startDelayId = setTimeout(() => {
+        const durationMs = 1800;
+        const startTime = performance.now();
+
+        const step = (now: number) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / durationMs, 1);
+          setDisplay(formatMetric(parsed, progress));
+
+          if (progress < 1) {
+            rafId = window.requestAnimationFrame(step);
+          } else {
+            setDisplay(value);
+            setIsSettled(true);
+            isAnimating = false;
+            playSpringSettle(0, 0.85);
+          }
+        };
+
+        rafId = window.requestAnimationFrame(step);
+      }, 180);
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            runAnimation();
-            observer.disconnect();
-            break;
+            startCount();
+          } else {
+            if (startDelayId) clearTimeout(startDelayId);
+            if (rafId) window.cancelAnimationFrame(rafId);
+            isAnimating = false;
+            setIsSettled(false);
+            setDisplay(formatMetric(parsed, 0));
           }
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
 
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.95 && rect.bottom > 0) {
-      runAnimation();
-    } else {
-      observer.observe(el);
-    }
+    observer.observe(el);
 
     return () => {
       observer.disconnect();
+      if (startDelayId) clearTimeout(startDelayId);
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, [value]);
 
   return (
-    <span ref={ref} className="tabular-nums">
+    <span
+      ref={ref}
+      className={`inline-block tabular-nums transition-transform duration-500 ${
+        isSettled ? "scale-100" : "scale-[0.96]"
+      }`}
+    >
       {display}
     </span>
   );

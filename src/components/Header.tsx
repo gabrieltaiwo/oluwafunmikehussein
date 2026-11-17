@@ -8,12 +8,12 @@ interface HeaderProps {
 
 export function Header({ hasPerspectives }: HeaderProps) {
   const navItems = [
-    { href: "/#practice", label: "Practice" },
-    { href: "/#experience", label: "Experience" },
+    { href: "/", label: "Home" },
+    { href: "/practice", label: "Practice" },
+    ...(hasPerspectives
+      ? [{ href: "/perspectives", label: "Perspectives" }]
+      : []),
     { href: "/about", label: "About" },
-    hasPerspectives
-      ? { href: "/perspectives", label: "Perspectives" }
-      : { href: "/#briefings", label: "Briefings" },
   ];
 
   return (
@@ -49,7 +49,7 @@ export function Header({ hasPerspectives }: HeaderProps) {
           <ThemeSwitcher />
 
           <Link
-            href="/#contact"
+            href="/contact"
             className="inline-flex min-h-[44px] items-center justify-center bg-accent px-5 py-2 text-sm font-semibold text-btn-ink transition-colors hover:bg-accent-hover"
           >
             Get in touch
